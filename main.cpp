@@ -17,6 +17,8 @@ int main()
     }
     
     copy(intvector.begin(), intvector.end(), ostream_iterator<int>(cout, " "));
+
+    cout << " test commit " << endl;
     cout << endl;
 
     return 0;
