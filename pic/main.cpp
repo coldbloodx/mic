@@ -20,20 +20,19 @@
 #include <string.h>
 
 // user libs
-
-#include "../lib/logutils.h"
+#include "logutils.h"
 
 using namespace std;
 
 #define MAX_PROC_ENT 2048
 #define MAXFILENAMELEN 4096
 
-enum ProcessState
+enum LA_ProcessState
 {
     LA_PSTAT_RUNNING,
     LA_PSTAT_INTERRUPTIBLE,
     LA_PSTAT_UNINTERRUPTIBLE,
-    LA_PSTAT_ZOMBI,
+    LA_PSTAT_ZOMBIE,
     LA_PSTAT_STOPPED,
     LA_PSTAT_SWAPPED,
     LA_PSTAT_SLEEP,
@@ -48,7 +47,7 @@ enum LA_LogLevel
     LA_LLEVEL_ERROR
 };
 
-struct ProcessInfo
+struct LA_ProcessInfo
 {
     int pid;
     int ppid;
@@ -61,17 +60,17 @@ struct ProcessInfo
     int proc_size;
     int resident_size;
     int stack_size;
-    enum ProcessState state;
+    enum LA_ProcessState state;
     char command[PATH_MAX];
 };
 
-static int parse_proc_stat(char *buf, struct ProcessInfo *pinfo);
-static int get_proc_info(int pid, struct ProcessInfo  *rec);
+static int parse_proc_stat(char *buf, struct LA_ProcessInfo *pinfo);
+static int get_proc_info(int pid, struct LA_ProcessInfo  *rec);
 static void log_proc_info(void);
 static void la_syslog(string str);
 
 //static vars
-static struct ProcessInfo procs[MAX_PROC_ENT];
+static struct LA_ProcessInfo procs[MAX_PROC_ENT];
 static int numprocs;
 
 //global vars
@@ -115,7 +114,7 @@ int scan_procs(void)
 {
     DIR *dir;
     struct dirent *process;
-    struct ProcessInfo rec;
+    struct LA_ProcessInfo rec;
 
     dir = opendir("/proc");
     if (dir == NULL) {
@@ -210,7 +209,7 @@ static void log_proc_info(void)
 //end log_proc_info
 
 //get_proc_info
-static int get_proc_info(int pid, struct ProcessInfo  *rec)
+static int get_proc_info(int pid, struct LA_ProcessInfo  *rec)
 {
     int fd;
     static char filename[PATH_MAX];
@@ -241,7 +240,7 @@ static int get_proc_info(int pid, struct ProcessInfo  *rec)
 //end get_proc_info
 
 //parse_proc_stat
-static int parse_proc_stat(char *buf, struct ProcessInfo *pinfo)
+static int parse_proc_stat(char *buf, struct LA_ProcessInfo *pinfo)
 {
     unsigned int rss_rlim;
     unsigned int start_code;
@@ -281,7 +280,7 @@ static int parse_proc_stat(char *buf, struct ProcessInfo *pinfo)
             pinfo->state = LA_PSTAT_STOPPED;
             break;
         case 'Z' :
-            pinfo->state = LA_PSTAT_ZOMBI;
+            pinfo->state = LA_PSTAT_ZOMBIE;
             break;
         case 'W' :
             pinfo->state = LA_PSTAT_SWAPPED;

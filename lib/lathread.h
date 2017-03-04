@@ -1,6 +1,7 @@
 #ifndef __LATHREAD_HEADER__
 #define __LATHREAD_HEADER__
 
+#include <pthread.h>
 
 class LAThread
 {

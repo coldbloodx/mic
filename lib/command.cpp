@@ -17,6 +17,9 @@ using namespace std;
 
 LALogUtils* logger = LALogUtils::get_instance_ptr();
 
+
+extern LACommandExecuter* executer = LACommandExecuter::create_instance();
+
 //file sync command
 LAFileSyncCommand::LAFileSyncCommand(const std::string& nfsdir)
 {

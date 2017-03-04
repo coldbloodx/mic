@@ -1,14 +1,12 @@
 #include "lathread.h"
 #include "command.h"
 #include "netutils.h"
-#include <pthread.h>
 
 #include <iostream>
 using namespace std;
 
-
-extern pthread_mutex_t g_mutex;
-extern pthread_cond_t g_cond; 
+extern pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
+extern pthread_cond_t g_cond = PTHREAD_COND_INITIALIZER;
 extern LACommandExecuter* executer;
 
 int LAThread::parse_msg(void* msg)

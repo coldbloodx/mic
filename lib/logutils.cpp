@@ -1,5 +1,5 @@
-#include "logutils.h"
 #include "fsutils.h"
+#include "logutils.h"
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -17,7 +17,7 @@ LALogUtils::LALogUtils()
 
 void LALogUtils::log(const int& loglevel, const char* format, ...)
 {
-    static char buff[1024];
+    static char buff[4096];
 
     va_list vl;
     va_start(vl, format);
@@ -31,7 +31,7 @@ void LALogUtils::log(const int& loglevel, const char* format, ...)
 
 void LALogUtils::info_log(const char* format, ...)
 {
-    static char buff[1024];
+    static char buff[4096];
 
     va_list vl;
     va_start(vl, format);
@@ -43,7 +43,7 @@ void LALogUtils::info_log(const char* format, ...)
 
 void LALogUtils::debug_log(const char* format, ...)
 {
-    static char buff[1024];
+    static char buff[4096];
 
     va_list vl;
     va_start(vl, format);
@@ -55,7 +55,7 @@ void LALogUtils::debug_log(const char* format, ...)
 
 void LALogUtils::error_log(const char* format, ...)
 {
-    static char buff[1024];
+    static char buff[4096];
 
     va_list vl;
     va_start(vl, format);
