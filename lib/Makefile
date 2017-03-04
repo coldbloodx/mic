@@ -5,9 +5,6 @@ SRCS = $$(files=""; for file in `ls *.c *.cpp 2>/dev/null`; do files="$$files `b
 CXXFLAGS += -Wno-format-security -Wno-write-strings
 %.o: %.cpp
 	g++ -g -o $@ -c $< $(CXXFLAGS)
-
-
-
 all: 
 	@echo build sources: $(SRCS)
 	@echo build target: $(OBJS)
