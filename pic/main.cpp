@@ -294,8 +294,6 @@ static int parse_proc_stat(char *buf, struct LA_ProcessInfo *pinfo)
 }
 //end parse_proc_stat
 
-
-
 int main() 
 {
     //init logger

@@ -60,10 +60,6 @@ DEST = $(prefix)/ladaemon
 
 
 clean:
+	cd pic; $(MAKE) clean
 	rm -f *.o lib/*.o ; rm -f ladaemon log.txt utreader ladaemon core utconfigparser utstrutils utfsutils utscriptexecutor utlogger utcommand utnfsutils utnetutils
-	rm -f ../*.tar.gz ../*.dsc ../*.deb ../*.changes
-	rm -fr debian/ladaemon/
-	rm -f debian/ladaemon.debhelper.log  debian/ladaemon.substvars 
-	rm -f debian/files
-	rm -fr SOURCES SPECS RPMS SRPMS BUILD BUILDROOT
-	rm -fr *.rpm app
+	rm -fr mic
