@@ -1,14 +1,10 @@
 .PHONY: all
 
-SRCS = $$(files=""; for file in `ls *.c *.cpp 2>/dev/null`; do files="$$files `basename $$file`";  done ; echo $$files)
+OBJS =  $(shell files=""; for file in `ls *.cpp *.c 2>/dev/null`; do obj=`echo $$file |sed -r 's/(.*)\.cpp/\1.o/g'`; files="$$files $$obj"; done ; echo $$files)
 
-CXXFLAGS += -Wno-format-security -Wno-write-strings -g
-%.o: %.cpp
-	g++ -g -o $@ -c $< $(CXXFLAGS)
-all: 
-	@echo build sources: $(SRCS)
-	@echo build target: $(OBJS)
-	for file in $(SRCS); do g++ -g $$file -c $(CXXFLAGS); done;
+CXXFLAGS = -Wno-format-security -Wno-write-strings -g
+
+all: $(OBJS)
 
 clean: 
-	rm -fr *.o
+	rm -fr $(OBJS)

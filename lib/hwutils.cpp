@@ -5,29 +5,32 @@
 #include "sys/stat.h"
 #include "fcntl.h"
 
-
-
-CpuInfo::LAHWInfoCollector getcpuinfo()
+int LAHWInfoCollector::getcpuinfo(CpuInfo *cpuinfo)
 {
     cout << "in get cpu info" << endl;
+    return 0;
 }
 
-MemInfo::LAHWInfoCollector  getmeminfo()
+int LAHWInfoCollector::getmeminfo(MemInfo *meminfo)
 {
-    cout << " in get mem info" <<endl;
+    cout << "in get mem info" <<endl;
+    return 0;
 }
 
-DiskInfo::LAHWInfoCollector getdiskinfo()
+int LAHWInfoCollector::getdiskinfo(DiskInfo *diskinfo)
 {
-    cout << " in get disk info" <<endl;
+    cout << "in get disk info" <<endl;
+    return 0;
 }
 
-PciInfo::LAHWInfoCollector  getpciinfo()
+int LAHWInfoCollector::getpciinfo(PciInfo *pciinfo)
 {
-    cout << " in get pci info" << endl;
+    cout << "in get pci info" << endl;
+    return 0;
 }
 
-VideoInfo::LAHWInfoCollector getvgainfo()
+int LAHWInfoCollector::getvgainfo(VideoInfo *videoinfo)
 {
-    cout << " in get vga info " << endl;
+    cout << "in get vga info " << endl;
+    return 0;
 }

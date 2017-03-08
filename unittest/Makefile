@@ -2,19 +2,18 @@
 .PHONY: clean
 .PHONY: lalibs 
 
-LIBS= -lpthread  -I ../lib
-OBJS= ../lib/*.o
+LIBS = -lpthread  
 
-FLAGS= -g -Wformat-security
+OBJS = ../lib/*.o
 
-all: 
-	for file in `ls *.cpp *.c 2>/dev/null`; do \
-	    g++ $(LIBS) $(FLAGS) $(OBJS) $$file -o `echo $$file | sed -r 's/(.*)\.cpp/\1/g'`   ; \
-	done
+CXXFLAGS = -g -Wformat-security -I ../lib/ -L ../lib/  $(OBJS)
+
+UTAPPS :=  $(shell files=""; for file in `ls *.cpp *.c 2>/dev/null`; do app=`echo $$file |sed -r 's/(.*)\.cpp/\1/g'`; files="$$files $$app"; done ; echo $$files)
+
+all:  lalibs $(UTAPPS)
 
 lalibs:
 	cd ../lib; $(MAKE)
-
 clean:
-	rm -fr app core
-	rm -fr ../lib/*.o
+	rm -fr $(UTAPPS)
+	cd ../lib; $(MAKE) clean
