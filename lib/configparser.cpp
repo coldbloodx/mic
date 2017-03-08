@@ -10,18 +10,20 @@
 #include <regex.h>
 #include <string.h>
 
-LAConfigParser::LAConfigParser(char* path)
+LAConfigParser::LAConfigParser(char* path, char* delimiter)
 {
     this->path = std::string(path);
+    this->delimiter = std::string(delimiter);
     this->key_value_map = new map<std::string, std::string>;
     this->lines = new vector<std::string>;
     this->read_config();
     this->read_all();
 }
 
-LAConfigParser::LAConfigParser(std::string path)
+LAConfigParser::LAConfigParser(std::string path, std::string delimiter)
 {
     this->path = path;
+    this->delimiter = std::string(delimiter);
     this->key_value_map = new map<std::string, std::string>;
     this->lines = new vector<std::string>;
     this->read_config();
@@ -43,14 +45,14 @@ LAConfigParser::~LAConfigParser()
     }
 }
 
-LAConfigParser* LAConfigParser::create_instance(const char* conf)
+LAConfigParser* LAConfigParser::create_instance(const char* conf, char* delimiter)
 {
     if(!LAFsUtils::exists(conf) || !LAFsUtils::isfile(conf))
     {
         throw(LAFileNotFoundException(conf));
     }
 
-    return (new LAConfigParser(conf));
+    return (new LAConfigParser(conf, delimiter));
 }
 
 const char* LAConfigParser::read_plugin_dir()
@@ -92,11 +94,14 @@ map<std::string, std::string>* LAConfigParser::read_all()
     {
         regfree(&blank_line_regex);
     }
+    
 
-    char* conf_line_pattern = "[ |\t]*([a-zA-Z_]+)[ |\t]*=[ |\t]*'([a-z|A-Z|0-9|/|\\.|_|,|-]?+)'.*"; 
+    std::string conf_line_pattern = "(.*)";
+    conf_line_pattern = conf_line_pattern + (this->delimiter + "(.*)" );
+
     regex_t conf_line_regex;
     regmatch_t match[3];
-    if(regcomp(&conf_line_regex, conf_line_pattern, REG_EXTENDED))
+    if(regcomp(&conf_line_regex, conf_line_pattern.c_str(), REG_EXTENDED))
     {
         regfree(&conf_line_regex);
     }
@@ -113,7 +118,6 @@ map<std::string, std::string>* LAConfigParser::read_all()
             continue;
         }
 
-        
         if(0 == regexec(&blank_line_regex, line.c_str(), 0, NULL, 0))
         {
             continue;
@@ -147,3 +151,10 @@ bool LAConfigParser::map_has_key(std::map<std::string, std::string>* map_ptr, st
     return (!(it == map_ptr->end()));
 }
 
+void LAConfigParser::dump()
+{
+    for(std::map<std::string, std::string>::iterator it=key_value_map->begin(); it != key_value_map->end(); ++it)
+    {
+        cout << it->first <<": " << it->second <<endl;
+    }
+}

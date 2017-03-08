@@ -7,6 +7,8 @@ class LAException
 {
     public:
         virtual ~LAException(){};
+    public:
+        std::string info;
 };
 
 class LAKeyNotFoundException: public LAException
@@ -15,8 +17,6 @@ class LAKeyNotFoundException: public LAException
         LAKeyNotFoundException(std::string key);
         virtual ~LAKeyNotFoundException(){};
 
-    public:
-        std::string info;
 };
 
 
@@ -26,8 +26,6 @@ class LADuplicateKeyException: public LAException
         LADuplicateKeyException(std::string key);
         virtual ~LADuplicateKeyException(){};
 
-    public:
-        std::string info;
 };
 
 class LAFileNotFoundException: public LAException
@@ -37,8 +35,6 @@ class LAFileNotFoundException: public LAException
         LAFileNotFoundException(std::string path);
         virtual ~LAFileNotFoundException(){};
 
-    public:
-        std::string info;
 };
 
 class LADirectoryOpenException: public LAException
@@ -47,8 +43,6 @@ class LADirectoryOpenException: public LAException
         LADirectoryOpenException(char* path);
         LADirectoryOpenException(std::string path);
         virtual ~LADirectoryOpenException(){};
-    public:
-        std::string info;
 };
 
 class LADirectoryCanNotReadException: public LAException
@@ -57,8 +51,6 @@ class LADirectoryCanNotReadException: public LAException
         LADirectoryCanNotReadException(char* path);
         LADirectoryCanNotReadException(std::string path);
         virtual ~LADirectoryCanNotReadException(){};
-    public:
-        std::string info;
 };
 
 #endif

@@ -37,11 +37,11 @@ int main()
     ret = LAStrUtils::in_list(str, key);
     cout<< "in_list:" << ret << endl;
 
-    std::string line("    +asdfasdfas  asdf assf");
-    cout<< "before:" << line << endl;
+    std::string line("    +asdfasdfas  asdf assf        ");
+    cout<< "before:" << line << "len:" << line.size() << endl;
     ret = LAStrUtils::trim(line, str);
     cout<< "trim  :" << ret << endl;
-    cout<< "after :" << str << endl;
+    cout<< "after :" << str << "len:" << str.size() << endl;
 
     line = "    -asdfasdfas  asdf assf";
     cout<< "before:" << line << endl;

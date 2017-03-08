@@ -4,6 +4,7 @@
 #include <iterator>
 #include <regex.h>
 #include <vector>
+#include <iostream>
 using namespace std;
 
 bool LAStrUtils::startswith(const char* str, const char* start)
@@ -55,22 +56,31 @@ bool LAStrUtils::endswith(const char* str, const char* end)
 
 bool LAStrUtils::trim(const std::string& line, std::string& ret)
 {
-    regex_t pkg_line_regex;
-    //char* pkg_line_pattern = "[ |\t]*([\\+|-][a-zA-Z0-9\\+-_ ]+)[ |\t]*";
-    char* pkg_line_pattern = "[ |\t]*([a-zA-Z0-9\\+-_ ]+)[ |\t]*";
-    if(regcomp(&pkg_line_regex, pkg_line_pattern, REG_EXTENDED))
+    ret.assign(line.begin(), line.end());
+    if (ret.empty())   
+    {  
+        return true;  
+    }  
+    
+    char* delimiters[] = {" ", "\t"};
+    
+    for(int i = 0; i < (sizeof(delimiters)/sizeof(char*)) ; i++) 
     {
-        regfree(&pkg_line_regex);
-        return false;
-    }
+        int index = 0;
+        index = ret.find_first_not_of(delimiters[i]);
+        if(index > 0) 
+        {
+            ret.erase(0,index);  
+        }
+        index = 0;
 
-    regmatch_t match[2];
-    if(regexec(&pkg_line_regex, line.c_str(), 2, match, 0))
-    {
-        return false;
+        index = ret.find_last_not_of(delimiters[i]);
+        if(index > 0)
+        {
+            ret.erase(index + 1);  
+        }
     }
-
-    ret.assign(line.c_str() + match[1].rm_so, match[1].rm_eo - match[1].rm_so);
+    
     return true;
 }
 

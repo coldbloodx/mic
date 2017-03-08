@@ -1,7 +1,6 @@
 #include <iostream>
 #include "hwutils.h"
 
-
 int main()
 {
     cout << "in uthwutils.cpp" << endl;

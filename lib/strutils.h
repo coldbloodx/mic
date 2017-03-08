@@ -23,8 +23,7 @@ class LAStrUtils
         static bool in_list(const std::string& src, const std::string& key);
 
         //split a string with a separator and return a vector of strings
-        static bool split(const std::string& str, std::vector<std::string>& ret, 
-                const std::string sep=",");
+        static bool split(const std::string& str, std::vector<std::string>& ret, const std::string sep=",");
         
 
 };
