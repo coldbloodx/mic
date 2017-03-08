@@ -2,7 +2,7 @@
 
 SRCS = $$(files=""; for file in `ls *.c *.cpp 2>/dev/null`; do files="$$files `basename $$file`";  done ; echo $$files)
 
-CXXFLAGS += -Wno-format-security -Wno-write-strings
+CXXFLAGS += -Wno-format-security -Wno-write-strings -g
 %.o: %.cpp
 	g++ -g -o $@ -c $< $(CXXFLAGS)
 all: 
