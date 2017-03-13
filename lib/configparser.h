@@ -12,7 +12,7 @@ class LAConfigParser
         ~LAConfigParser();
 
     public:
-        static LAConfigParser* create_instance(const char* conf="etc/lasync.conf", char* delimiter="=");
+        static LAConfigParser* create_instance(const char* conf="etc/lasync.conf", char* delimiter="=",bool allow_duplicate_keys=true);
 
     public:
         const char* read_plugin_dir();
@@ -23,9 +23,11 @@ class LAConfigParser
     private:
         std::string path;
         std::string delimiter;
+        bool allow_duplicate_keys;
 
-        LAConfigParser(char* path, char* delimiter="=");
-        LAConfigParser(std::string path, std::string delimiter="=");
+        LAConfigParser(char* path, char* delimiter="=", bool allow_duplicate_keys=true);
+        LAConfigParser(std::string path, std::string delimiter="=", bool allow_duplicate_keys=true);
+
         std::map<std::string, std::string>* read_all();
         std::map<std::string, std::string>* key_value_map;
         vector<std::string>* lines;

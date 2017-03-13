@@ -15,6 +15,7 @@ class LAStrUtils
         //src string: "  test  "
         //return string "test"
         static bool trim(const std::string&, std::string& ret);
+        static std::string trim(const std::string&);
 
         //check whether a key is in a list of words separated by"," or not. like following
         //src line host001,host002,host003

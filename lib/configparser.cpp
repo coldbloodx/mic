@@ -10,20 +10,22 @@
 #include <regex.h>
 #include <string.h>
 
-LAConfigParser::LAConfigParser(char* path, char* delimiter)
+LAConfigParser::LAConfigParser(char* path, char* delimiter, bool allow_duplicate_keys )
 {
     this->path = std::string(path);
     this->delimiter = std::string(delimiter);
     this->key_value_map = new map<std::string, std::string>;
+    this->allow_duplicate_keys = allow_duplicate_keys;
     this->lines = new vector<std::string>;
     this->read_config();
     this->read_all();
 }
 
-LAConfigParser::LAConfigParser(std::string path, std::string delimiter)
+LAConfigParser::LAConfigParser(std::string path, std::string delimiter, bool allow_duplicate_keys)
 {
     this->path = path;
     this->delimiter = std::string(delimiter);
+    this->allow_duplicate_keys = allow_duplicate_keys;
     this->key_value_map = new map<std::string, std::string>;
     this->lines = new vector<std::string>;
     this->read_config();
@@ -45,14 +47,14 @@ LAConfigParser::~LAConfigParser()
     }
 }
 
-LAConfigParser* LAConfigParser::create_instance(const char* conf, char* delimiter)
+LAConfigParser* LAConfigParser::create_instance(const char* conf, char* delimiter, bool allow_duplicate_keys)
 {
     if(!LAFsUtils::exists(conf) || !LAFsUtils::isfile(conf))
     {
         throw(LAFileNotFoundException(conf));
     }
 
-    return (new LAConfigParser(conf, delimiter));
+    return (new LAConfigParser(conf, delimiter, allow_duplicate_keys));
 }
 
 const char* LAConfigParser::read_plugin_dir()
@@ -77,11 +79,12 @@ void LAConfigParser::read_config()
     while(!conf.eof())
     {
         std::getline(conf, line);
-        if(line.length() == 0 )
+        std::string newline = LAStrUtils::trim(line);
+        if(newline.length() == 0 )
         {
             continue;
         }
-        lines->push_back(line);
+        lines->push_back(newline);
     }
 }
 
@@ -129,11 +132,17 @@ map<std::string, std::string>* LAConfigParser::read_all()
             std::string key(line.c_str() + match[1].rm_so, match[1].rm_eo - match[1].rm_so);
             std::string value(line.c_str() + match[2].rm_so, match[2].rm_eo - match[2].rm_so);
 
+            key = LAStrUtils::trim(key);
+            value = LAStrUtils::trim(value);
+
             std::map<std::string, std::string>::iterator it;
 
             if(map_has_key(this->key_value_map, key))
             {
-                throw(LADuplicateKeyException(key));
+                if(!this->allow_duplicate_keys) 
+                {
+                    throw(LADuplicateKeyException(key));
+                }
             }
             this->key_value_map->insert(pair<std::string, std::string>(key, value));
         }

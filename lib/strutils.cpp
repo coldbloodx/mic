@@ -53,6 +53,36 @@ bool LAStrUtils::endswith(const char* str, const char* end)
     return LAStrUtils::startswith(src.c_str(), dst.c_str());
 }
 
+std::string LAStrUtils::trim(const std::string& line)
+{
+    if (line.empty())
+    {
+        return line;
+    }
+
+    char* delimiters[] = {" ", "\t"};
+    std::string ret;
+    ret.assign(line.begin(), line.end());
+    
+    for(int i = 0; i < (sizeof(delimiters)/sizeof(char*)) ; i++) 
+    {
+        int index = 0;
+        index = ret.find_first_not_of(delimiters[i]);
+        if(index > 0) 
+        {
+            ret.erase(0,index);  
+        }
+        index = 0;
+
+        index = ret.find_last_not_of(delimiters[i]);
+        if(index > 0)
+        {
+            ret.erase(index + 1);  
+        }
+    }
+    
+    return ret;
+}
 
 bool LAStrUtils::trim(const std::string& line, std::string& ret)
 {

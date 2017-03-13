@@ -1,1 +1,7 @@
 *.swp
+*.o
+app
+
+#ignore utfiles, but not ut*.cpp
+ut*
+!ut*.cpp
