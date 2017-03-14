@@ -49,3 +49,24 @@ LAHardwareException::LAHardwareException(std::string hwtype)
 {
     this->info = std::string("can not get hardware info:") + hwtype;
 }
+
+LAFileCanNotAccessException::LAFileCanNotAccessException(char* path)
+{
+    this->info = std::string(path) + "can not be accessed";
+}
+
+LAFileCanNotAccessException::LAFileCanNotAccessException(std::string path)
+{
+    this->info = path + "can not be accessed";
+}
+
+LAWorkloadException::LAWorkloadException(char* info)
+{
+    this->info = std::string(info);
+}
+
+LAWorkloadException::LAWorkloadException(std::string info)
+{
+    this->info = info;
+}
+

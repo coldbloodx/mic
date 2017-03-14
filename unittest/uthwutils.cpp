@@ -12,6 +12,9 @@ int main()
     MemInfo meminfo = LAHWInfoCollector::getmeminfo();
     cout << meminfo << endl;
 
+    WorkloadInfo winfo = LAHWInfoCollector::getworkloadinfo();
+    cout << winfo << endl;
+
     int ret = 0;
 
     ret = LAHWInfoCollector::getdiskinfo(NULL);

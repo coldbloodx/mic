@@ -61,4 +61,20 @@ class LAHardwareException: public LAException
         virtual ~LAHardwareException() {};
 };
 
+class LAWorkloadException: public LAException
+{
+    public:
+        LAWorkloadException(char* msg);
+        LAWorkloadException(std::string msg);
+        virtual ~LAWorkloadException() {};
+};
+
+class LAFileCanNotAccessException: public LAException
+{
+    public:
+        LAFileCanNotAccessException(char* path);
+        LAFileCanNotAccessException(std::string path);
+        virtual ~LAFileCanNotAccessException(){};
+};
+
 #endif

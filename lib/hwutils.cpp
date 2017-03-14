@@ -21,14 +21,23 @@ ostream& operator<<(ostream& cout,const CpuInfo& cpuinfo)
 
 ostream& operator<<(ostream& cout,const MemInfo& meminfo)
 {
-    cout << "max:" << meminfo.max << endl;
-    cout << "free:" << meminfo.free << endl;
-    cout << "cached:" << meminfo.cached << endl;
+    cout << "maxmem:" << meminfo.maxmem << endl;
+    cout << "freemem:" << meminfo.freemem << endl;
+    cout << "cachedmem:" << meminfo.cachedmem << endl;
     cout << "maxswap:" << meminfo.maxswap << endl;
     cout << "freeswap:" << meminfo.freeswap << endl;
     return cout;
 }
 
+ostream& operator<<(ostream& cout,const WorkloadInfo& winfo)
+{
+    cout << "c15sl:" << winfo.c15sl << endl;
+    cout << "c1ml:" << winfo.c1ml << endl;
+    cout << "c5ml:" << winfo.c5ml << endl;
+    cout << "freemem:" << winfo.freemem << endl;
+    cout << "freeswap:" << winfo.freeswap << endl;
+    return cout;
+}
 
 CpuInfo LAHWInfoCollector::getcpuinfo()
 {
@@ -107,16 +116,16 @@ MemInfo LAHWInfoCollector::getmeminfo()
         
         
         key = "Cached";
-        info.cached = parser->read_value(key);
+        info.cachedmem = parser->read_value(key);
     
         key = "MemTotal";
-        info.max = parser->read_value(key);
+        info.maxmem = parser->read_value(key);
 
         key = "SwapTotal";
         info.maxswap = parser->read_value(key);
 
         key = "MemFree";
-        info.free = parser->read_value(key);
+        info.freemem = parser->read_value(key);
 
         key = "SwapFree";
         info.freeswap = parser->read_value(key);
@@ -129,6 +138,39 @@ MemInfo LAHWInfoCollector::getmeminfo()
     }
 
     return info;
+}
+
+WorkloadInfo LAHWInfoCollector::getworkloadinfo()
+{
+
+    FILE* fp = fopen("/proc/loadavg", "r");
+    if(fp == NULL)
+    {
+        throw LAFileCanNotAccessException("/proc/loadavg");
+    }
+
+    WorkloadInfo winfo;
+    int ret = fscanf(fp, "%f %f %f", &winfo.c15sl, &winfo.c1ml, &winfo.c5ml);
+    if(ret != 3)
+    {
+        fclose(fp);
+        throw LAFileCanNotAccessException("/proc/loadavg");
+    }
+    
+    try
+    {
+        MemInfo minfo = LAHWInfoCollector::getmeminfo();
+        
+        winfo.freeswap = minfo.freeswap;
+        winfo.freemem =  minfo.freemem;
+    }
+    catch(LAException &e)
+    {
+        throw LAWorkloadException(e.info);
+    }
+
+    return winfo;
+
 }
 
 int LAHWInfoCollector::getdiskinfo(DiskInfo *diskinfo)
