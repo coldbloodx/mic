@@ -7,21 +7,22 @@ using namespace std;
 struct CpuInfo 
 {
     string model_name;
-    string arch;
-    string byteorder;
     string logic_cores;
     string logic_threads;
-    string cores_per_socket;
-    string socket;
-    string virtualization;
-    string l1data_cache;
-    string l1instruction_cache;
+    string cache_size;
+    string frequency;
     string flags;
+    friend ostream& operator<<(ostream& cout,const CpuInfo& cpuinfo);
 };
 
 struct MemInfo 
 {
-    string modelname;
+    string max;
+    string free;
+    string cached;
+    string maxswap;
+    string freeswap;
+    friend ostream& operator<<(ostream& cout,const MemInfo& meminfo);
 };
 
 struct DiskInfo
@@ -38,15 +39,14 @@ struct VideoInfo
 
 struct PciInfo
 {
-
     string modelname;
 };
 
 class LAHWInfoCollector 
 {
 public:
-    static int getcpuinfo(CpuInfo *cpuinfo);
-    static int getmeminfo(MemInfo *meminfo);
+    static CpuInfo getcpuinfo();
+    static MemInfo getmeminfo();
     static int getdiskinfo(DiskInfo *diskinfo);
     static int getpciinfo(PciInfo *pciinfo);
     static int getvgainfo(VideoInfo *videoinfo);

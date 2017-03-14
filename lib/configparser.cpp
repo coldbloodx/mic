@@ -72,6 +72,16 @@ const char* LAConfigParser::read_value(char* key)
     return this->key_value_map->find(key)->second.c_str();
 }
 
+const std::string LAConfigParser::read_value(const std::string& key)
+{
+    if(!map_has_key(this->key_value_map, key))
+    {
+        throw(LAKeyNotFoundException(key));
+    }
+
+    return this->key_value_map->find(key)->second;
+}
+
 void LAConfigParser::read_config()
 {
     ifstream conf(this->path.c_str());

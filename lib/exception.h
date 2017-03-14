@@ -53,4 +53,12 @@ class LADirectoryCanNotReadException: public LAException
         virtual ~LADirectoryCanNotReadException(){};
 };
 
+class LAHardwareException: public LAException
+{
+    public:
+        LAHardwareException(char* hwtype);
+        LAHardwareException(std::string hwtype);
+        virtual ~LAHardwareException() {};
+};
+
 #endif

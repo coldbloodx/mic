@@ -18,8 +18,8 @@ int main()
     {
         cout << e.info << endl;
         delete parser;
+        parser = NULL;
     }
-    parser = NULL;
 
 
     cout<<"config parser with default param"<<endl;
@@ -35,22 +35,42 @@ int main()
     {
         cout << e.info << endl;
         delete parser;
+        parser = NULL;
     }
-    
+   
+    cout << "check cpu infomation" << endl;
     try
     {
         parser = LAConfigParser::create_instance("/proc/cpuinfo", ":");
 
         parser->dump();
 
-        std::string dummy_key = parser->read_value("none exists key"); 
-        cout<< dummy_key <<endl;
+    }
+    catch(LAException &e)
+    {
+        delete parser;
+        parser = NULL;
+        cout << e.info << endl;
+    }
+    cout << endl;
+    
+    
+    cout << "check memory information" << endl;
+    try
+    {
+        parser = LAConfigParser::create_instance("/proc/meminfo", ":");
+
+        parser->dump();
+
     }
     catch(LAException &e)
     {
         cout << e.info << endl;
         delete parser;
     }
+    cout << endl;
 
+    delete parser;
+    parser = NULL;
     return 0;
 }

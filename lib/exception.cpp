@@ -39,3 +39,13 @@ LADirectoryCanNotReadException::LADirectoryCanNotReadException(std::string path)
 {
     this->info = path + " can not be accessed";
 }
+
+LAHardwareException::LAHardwareException(char* hwtype)
+{
+    this->info = std::string("can not get hardware info:") + hwtype;
+}
+
+LAHardwareException::LAHardwareException(std::string hwtype)
+{
+    this->info = std::string("can not get hardware info:") + hwtype;
+}

@@ -1,20 +1,134 @@
 #include <iostream>
-#include "hwutils.h"
-#include "stdio.h"
-#include "unistd.h"
-#include "sys/stat.h"
-#include "fcntl.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
-int LAHWInfoCollector::getcpuinfo(CpuInfo *cpuinfo)
+#include "hwutils.h"
+#include "configparser.h"
+#include "exception.h"
+
+ostream& operator<<(ostream& cout,const CpuInfo& cpuinfo)
 {
-    cout << "in get cpu info" << endl;
-    return 0;
+    cout << "model_name:" << cpuinfo.model_name << endl;
+    cout << "logic_cores:" << cpuinfo.logic_cores << endl;
+    cout << "logic_threads:" << cpuinfo.logic_threads << endl;
+    cout << "cache_size:" << cpuinfo.cache_size << endl;
+    cout << "frequency:" << cpuinfo.frequency << endl;
+    cout << "flags:" << cpuinfo.flags << endl;
+    return cout;
 }
 
-int LAHWInfoCollector::getmeminfo(MemInfo *meminfo)
+ostream& operator<<(ostream& cout,const MemInfo& meminfo)
 {
-    cout << "in get mem info" <<endl;
-    return 0;
+    cout << "max:" << meminfo.max << endl;
+    cout << "free:" << meminfo.free << endl;
+    cout << "cached:" << meminfo.cached << endl;
+    cout << "maxswap:" << meminfo.maxswap << endl;
+    cout << "freeswap:" << meminfo.freeswap << endl;
+    return cout;
+}
+
+
+CpuInfo LAHWInfoCollector::getcpuinfo()
+{
+    LAConfigParser* parser = NULL;
+
+    try
+    {
+        parser = LAConfigParser::create_instance("/proc/cpuinfo", ":");
+        //parser->dump();
+
+    }
+    catch(LAException &e)
+    {
+        throw LAHardwareException(" CPU");
+        delete parser;
+        parser = NULL;
+    }
+    
+    CpuInfo info;
+    std::string key;
+    
+    try
+    {
+        //char* ckeys [] = {"model name", "cache size", "cpu MHz", "flags", "cpu cores", "processor"};
+        
+        key = "model name";
+        info.model_name = parser->read_value(key);
+
+        key = "cache size";
+        info.cache_size = parser->read_value(key);
+
+        key = "processor";
+        info.logic_threads = parser->read_value(key);
+
+        key = "cpu cores";
+        info.logic_cores = parser->read_value(key);
+
+        key = "cpu MHz";
+        info.frequency = parser->read_value(key);
+
+        key = "flags";
+        info.flags = parser->read_value(key);
+    }
+    catch(LAException &e)
+    {
+        throw LAKeyNotFoundException(key);
+        delete parser;
+        parser = NULL;
+    }
+    return info;
+}
+
+MemInfo LAHWInfoCollector::getmeminfo()
+{
+    LAConfigParser* parser = NULL;
+
+    try
+    {
+        parser = LAConfigParser::create_instance("/proc/meminfo", ":");
+        //parser->dump();
+
+    }
+    catch(LAException &e)
+    {
+        throw LAHardwareException(" Memory");
+        delete parser;
+        parser = NULL;
+    }
+
+    MemInfo info;
+    std::string key;
+
+    try
+    {
+        //char* ckeys [] = {"Cached", "MemTotal", "MemFree", "SwapTotal", "SwapFree"};
+        
+        
+        key = "Cached";
+        info.cached = parser->read_value(key);
+    
+        key = "MemTotal";
+        info.max = parser->read_value(key);
+
+        key = "SwapTotal";
+        info.maxswap = parser->read_value(key);
+
+        key = "MemFree";
+        info.free = parser->read_value(key);
+
+        key = "SwapFree";
+        info.freeswap = parser->read_value(key);
+    }
+    catch(LAException &e)
+    {
+        throw LAKeyNotFoundException(key);
+        delete parser;
+        parser = NULL;
+    }
+
+    return info;
 }
 
 int LAHWInfoCollector::getdiskinfo(DiskInfo *diskinfo)

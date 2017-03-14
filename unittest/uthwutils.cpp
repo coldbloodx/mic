@@ -5,11 +5,14 @@ int main()
 {
     cout << "in uthwutils.cpp" << endl;
 
-    int ret = 0;
 
-    ret = LAHWInfoCollector::getcpuinfo(NULL);
+    CpuInfo cpuinfo = LAHWInfoCollector::getcpuinfo();
+    cout << cpuinfo << endl;
     
-    ret = LAHWInfoCollector::getmeminfo(NULL); 
+    MemInfo meminfo = LAHWInfoCollector::getmeminfo();
+    cout << meminfo << endl;
+
+    int ret = 0;
 
     ret = LAHWInfoCollector::getdiskinfo(NULL);
 

@@ -17,6 +17,7 @@ class LAConfigParser
     public:
         const char* read_plugin_dir();
         const char* read_value(char* key);
+        const std::string read_value(const std::string& key);
         static bool map_has_key(std::map<std::string, std::string>* map_ptr, std::string key);
         void dump();
 
