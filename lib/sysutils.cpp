@@ -4,7 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#include "hwutils.h"
+#include "sysutils.h"
 #include "configparser.h"
 #include "exception.h"
 
