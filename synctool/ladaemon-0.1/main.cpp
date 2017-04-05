@@ -32,7 +32,6 @@ using namespace std;
 
 extern pthread_mutex_t g_mutex;
 extern pthread_cond_t g_cond;
-
 extern LACommandExecuter* executer; 
 
 void cleanup()
