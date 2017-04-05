@@ -357,3 +357,5 @@ void LACommandExecuter::pop_first_command()
     this->command_queue.pop_front();
     return ;
 }
+
+LACommandExecuter* executer = LACommandExecuter::create_instance();

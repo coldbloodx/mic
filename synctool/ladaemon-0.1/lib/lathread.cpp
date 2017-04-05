@@ -7,8 +7,8 @@
 using namespace std;
 
 
-extern pthread_mutex_t g_mutex;
-extern pthread_cond_t g_cond; 
+pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_cond_t g_cond = PTHREAD_COND_INITIALIZER;
 extern LACommandExecuter* executer;
 
 int LAThread::parse_msg(void* msg)

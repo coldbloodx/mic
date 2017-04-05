@@ -5,10 +5,12 @@
 
 all: lasync
 
+
+OBJS = lib/*.o
 CXXFLAGS = -Wno-write-strings -Wno-format-security
 
 ifdef DIST
-    CXXFLAGS += -D __REDHAT__
+    CXXFLAGS += -D __REDHAT__ -g
 endif  
 
 RPMNAME=lasync-0.1-1.x86_64
@@ -29,11 +31,12 @@ deb:
 	rm -f debian/files
 	rm -f ../*.tar.gz ../*.dsc ../*.changes
 
-lasync: main.o lib/cmdutils.o lib/netutils.o lib/configparser.o lib/fsutils.o lib/strutils.o lib/exception.o lib/nfsutils.o
-	g++ -g -o $@ $^ $(CXXFLAGS)
+lasync: main.o 
+	cd lib; $(MAKE)
+	g++ $(OBJS) $(CXXFLAGS)  -o $@ $^ 
 
 %.o: %.cpp
-	g++ -c -g -o $@ $< $(CXXFLAGS)
+	g++ -c $(CXXFLAGS) -o $@ $< 
 
 prefix = /
 DEST = $(prefix)/opt/lasync
@@ -48,10 +51,11 @@ uninstall: clean
 	rm -fr /opt/laworks;
 
 clean:
-	rm -f *.o lib/*.o ; rm -fr lasync
-	rm -f ../*.tar.gz ../*.dsc ../*.deb ../*.changes
-	rm -fr debian/lasync/
-	rm -f debian/lasync.debhelper.log  debian/lasync.substvars 
-	rm -f debian/files
-	rm -fr SOURCES SPECS RPMS SRPMS BUILD BUILDROOT
-	rm -fr *.rpm
+	rm -fr lasync
+	rm -f *.o lib/*.o 
+	#rm -f ../*.tar.gz ../*.dsc ../*.deb ../*.changes
+	#rm -fr debian/lasync/
+	#rm -f debian/lasync.debhelper.log  debian/lasync.substvars 
+	#rm -f debian/files
+	#rm -fr SOURCES SPECS RPMS SRPMS BUILD BUILDROOT
+	#rm -fr *.rpm

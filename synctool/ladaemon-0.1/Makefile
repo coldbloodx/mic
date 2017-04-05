@@ -1,10 +1,10 @@
 .PHONY: all
-
 .PHONY: ladaemon
-
 .PHONY: clean
+
+OBJS = lib/*.o
 LIBS = -lpthread
-CXXFLAGS = -Wno-write-strings -Wno-format-security
+CXXFLAGS = -Wno-write-strings -Wno-format-security -g
 
 ifdef DIST
     CXXFLAGS += -D __REDHAT__
@@ -29,44 +29,15 @@ deb:
 	rm -f debian/ladaemon.debhelper.log  debian/ladaemon.substvars 
 	rm -f debian/files
 
-ladaemon: main.o lib/netutils.o lib/logutils.o lib/fsutils.o lib/mscutils.o lib/command.o lib/lathread.o lib/nfsutils.o lib/strutils.o lib/scriptexecutor.o lib/configparser.o lib/exception.o lib/dirreader.o 
-	g++ -o $@ $^ $(LIBS) -g $(CXXFLAGS)
+ladaemon: main.o
+	cd lib; $(MAKE)
+	g++ -o $@ $^ $(OBJS) $(LIBS) $(CXXFLAGS)
 
-ut: utreader utconfigparser utstrutils utfsutils utscriptexecutor utlogger utcommand utnfsutils utnetutils
+ut: 
+	cd unittest; $(MAKE)
 
-utnetutils: lib/netutils.o lib/utnetutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-
-utcommand: lib/command.o lib/utcommand.o lib/fsutils.o lib/nfsutils.o lib/netutils.o lib/strutils.o lib/scriptexecutor.o lib/configparser.o lib/exception.o lib/dirreader.o lib/logutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-
-utnfsutils: lib/nfsutils.o lib/utnfsutils.o lib/fsutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-
-utscriptexecutor: lib/scriptexecutor.o lib/utscriptexecutor.o lib/exception.o lib/dirreader.o lib/configparser.o lib/fsutils.o lib/strutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-
-utstrutils: lib/strutils.o lib/utstrutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-utfsutils: lib/fsutils.o lib/utfsutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-utreader:lib/dirreader.o lib/utdirreader.o lib/exception.o 
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-utlogger:lib/logutils.o lib/utlog.o lib/fsutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-
-utconfigparser: lib/configparser.o lib/utconfigparser.o lib/exception.o lib/fsutils.o lib/strutils.o
-	g++ -o $@ $^ -g $(CXXFLAGS)
-	
 %.o: %.cpp
-	g++ -g -o $@ -c $< $(CXXFLAGS)
+	g++ -o $@ -c $< $(CXXFLAGS)
 
 
 prefix = /opt
@@ -79,14 +50,12 @@ install:all
 	cp -r etc log syncdir scripts $(DEST)
 	cp -r svcladaemon $(DEST)/etc/init.d/
 
-
-
 clean:
-	rm -f *.o lib/*.o ; rm -f ladaemon log.txt utreader ladaemon core utconfigparser utstrutils utfsutils utscriptexecutor utlogger utcommand utnfsutils utnetutils
-	rm -f ../*.tar.gz ../*.dsc ../*.deb ../*.changes
-	rm -fr debian/ladaemon/
-	rm -f debian/ladaemon.debhelper.log  debian/ladaemon.substvars 
-	rm -f debian/files
-	rm -fr SOURCES SPECS RPMS SRPMS BUILD BUILDROOT
 	rm -fr *.rpm
-
+	cd unittest; $(MAKE) clean
+	rm -fr SOURCES SPECS RPMS SRPMS BUILD BUILDROOT
+	rm -f debian/files
+	rm -f debian/ladaemon.debhelper.log  debian/ladaemon.substvars 
+	rm -fr debian/ladaemon/
+	rm -f ../*.tar.gz ../*.dsc ../*.deb ../*.changes
+	rm -f *.o 

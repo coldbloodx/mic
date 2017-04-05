@@ -30,10 +30,10 @@
 
 using namespace std;
 
-pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t g_cond = PTHREAD_COND_INITIALIZER;
+extern pthread_mutex_t g_mutex;
+extern pthread_cond_t g_cond;
 
-LACommandExecuter* executer = LACommandExecuter::create_instance();
+extern LACommandExecuter* executer; 
 
 void cleanup()
 {
